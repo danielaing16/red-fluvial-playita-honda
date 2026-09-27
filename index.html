@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Red Fluvial Solidaria - Playita Honda</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            fluvial: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              700: '#0F52BA',
+              800: '#0B3C5D',
+              900: '#07243a',
+            },
+            selva: {
+              500: '#2E7D32',
+              600: '#1b5e20',
+            },
+            seguridad: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Prevent accidental zoom on mobile form controls */
+    input, select, button {
+      touch-action: manipulation;
+    }
+    /* Custom scrollbars for clean tablet feel */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .tap-highlight-none {
+      -webkit-tap-highlight-color: transparent;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulse-ring {
+      animation: pulse-ring 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col select-none antialiased">
+
+  <!-- Top Hardware Status Bar (Tablet/Smartphone mockup feel) -->
+  <header class="bg-fluvial-900 text-slate-200 px-4 py-1.5 flex justify-between items-center text-xs tracking-wide border-b border-fluvial-800">
+    <div class="flex items-center gap-2">
+      <span id="current-clock" class="font-bold tracking-wider">08:15 AM</span>
+      <span class="text-slate-400">|</span>
+      <span class="text-slate-300 font-medium">Río Tarena (Unguía)</span>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Network Mode Toggle (Simulation) -->
+      <button onclick="toggleNetworkMode()" id="network-toggle-btn" class="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold transition bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30">
+        <i data-lucide="wifi-off" class="w-3.5 h-3.5" id="net-icon"></i>
+        <span id="net-text">MODO OFFLINE (Click para alternar)</span>
+      </button>
+
+      <div class="flex items-center gap-1">
+        <i data-lucide="battery-charging" class="w-4 h-4 text-emerald-400"></i>
+        <span class="text-[11px] font-mono">92%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Offline Safeguard Banner -->
+  <div id="offline-banner" class="bg-amber-600 text-white px-4 py-1 text-xs md:text-sm font-semibold flex items-center justify-between shadow-inner">
+    <div class="flex items-center gap-2">
+      <i data-lucide="shield-check" class="w-4 h-4 flex-shrink-0"></i>
+      <span>ESTADO OFFLINE: Almacenamiento seguro en Tableta Comunal de Playita Honda.</span>
+    </div>
+    <span class="text-[11px] bg-black/20 px-2 py-0.5 rounded-full" id="pending-counter-badge">14 registros en cola</span>
+  </div>
+
+  <div class="bg-fluvial-800 text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-fluvial-700 border-2 border-white/20 flex items-center justify-center shadow-inner text-amber-400">
+          <i data-lucide="waves" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg md:text-xl font-bold tracking-tight text-white leading-tight">
+            Red Fluvial Solidaria
+          </h1>
+          <p class="text-xs sm:text-sm text-fluvial-100 flex items-center gap-1 font-medium">
+            <span>Playita Honda</span>
+            <span class="text-amber-300">•</span>
+            <span>Comunidad & Navegación Segura</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Community Profile Badge -->
+      <div class="flex items-center gap-2.5 bg-fluvial-900/60 pl-3 pr-2 py-1.5 rounded-xl border border-white/10">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-semibold text-white">Capitán Juan P.</div>
+          <div class="text-[11px] text-amber-300 font-medium">Líder Comunitario</div>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-amber-500 text-fluvial-900 flex items-center justify-center font-bold text-sm border-2 border-white">
+          JP
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6 pb-24 md:pb-8 flex flex-col gap-4">
+
+    <!-- Active Navigation Indicator for Tablet/Desktop -->
+    <nav class="hidden md:flex bg-white rounded-2xl p-1.5 shadow-sm border border-slate-200 justify-between items-center text-sm font-semibold">
+      <button onclick="switchTab('turnos')" class="tab-btn flex-1 py-3 px-3 rounded-xl flex items-center justify-center gap-2 transition text-slate-600 hover:text-fluvial-800" data-tab="turnos">
+        <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+        <span>1. Turnos y Cruces</span>
+      </button>
+      <button onclick="switchTab('pasajeros')" class="tab-btn flex-1 py-3 px-3 rounded-xl flex items-center justify-center gap-2 transition text-slate-600 hover:text-fluvial-800" data-tab="pasajeros">
+        <i data-lucide="users" class="w-4 h-4"></i>
+        <span>2. Pasajeros y Aforo</span>
+      </button>
+      <button onclick="switchTab('seguridad')" class="tab-btn flex-1 py-3 px-3 rounded-xl flex items-center justify-center gap-2 transition text-slate-600 hover:text-fluvial-800" data-tab="seguridad">
+        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+        <span>3. Seguridad & Río</span>
+      </button>
+      <button onclick="switchTab('inventario')" class="tab-btn flex-1 py-3 px-3 rounded-xl flex items-center justify-center gap-2 transition text-slate-600 hover:text-fluvial-800" data-tab="inventario">
+        <i data-lucide="boxes" class="w-4 h-4"></i>
+        <span>4. Control de Inventario</span>
+      </button>
+      <button onclick="switchTab('sync')" class="tab-btn flex-1 py-3 px-3 rounded-xl flex items-center justify-center gap-2 transition text-slate-600 hover:text-fluvial-800" data-tab="sync">
+        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        <span>5. Sincronización</span>
+      </button>
+    </nav>
+
+    <!-- MODULE 1: TURNOS & CRUCES -->
+    <section id="module-turnos" class="tab-content flex flex-col gap-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div>
+          <h2 class="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-2.5 h-6 bg-fluvial-700 rounded-full inline-block"></span>
+            Coordinación Comunitaria de Turnos
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Programación diaria de cruces seguros sobre el río Tarena</p>
+        </div>
+        <button onclick="openModal('modal-nuevo-turno')" class="bg-selva-500 hover:bg-selva-600 active:scale-95 text-white font-semibold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-sm transition text-sm">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Nuevo Turno de Cruce</span>
+        </button>
+      </div>
+
+      <!-- Quick Shift Filters & List -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="turnos-list-container">
+        <!-- Dynamic Cards rendered via JS -->
+      </div>
+    </section>
+
+    <!-- MODULE 2: PASAJEROS Y AFORO -->
+    <section id="module-pasajeros" class="tab-content hidden flex flex-col gap-4">
+      <!-- Live Capacity Bar Component -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-fluvial-700">Turno en Curso: 08:00 AM • Canoa 'La Solidaria'</span>
+            <h2 class="text-xl font-extrabold text-slate-900 mt-0.5">Control de Aforo y Abordaje</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-semibold text-slate-600">Capacidad:</span>
+            <span id="capacity-text" class="text-lg font-black bg-slate-100 px-3 py-1 rounded-xl border border-slate-300">12 / 15</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Capacity Progress Bar -->
+        <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden p-0.5">
+          <div id="capacity-progress" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 80%"></div>
+        </div>
+        <p class="text-xs text-slate-500 flex items-center justify-between">
+          <span id="capacity-warning-text" class="font-medium text-emerald-700 flex items-center gap-1">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Aforo seguro dentro del rango permitido (Máx. 15 chalecos obligatorios)
+          </span>
+          <span class="font-semibold text-slate-600" id="capacity-pct">80% Lleno</span>
+        </p>
+      </div>
+
+      <!-- Search and Add Manifest Bar -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input type="text" id="passenger-search-input" oninput="filterPassengers()" placeholder="Buscar pasajero por nombre o número de cédula..." class="w-full pl-11 pr-4 py-3 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-fluvial-500 font-medium">
+        </div>
+        <button onclick="openModal('modal-nuevo-pasajero')" class="bg-fluvial-700 hover:bg-fluvial-800 text-white font-bold px-5 py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm transition text-sm">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <span>Registro Rápido</span>
+        </button>
+      </div>
+
+      <!-- Passenger List Manifest -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider flex justify-between items-center">
+          <span>Lista de Chequeo de Seguridad y Chalecos</span>
+          <span class="text-slate-400 font-normal">Check-in obligatorio antes de zarpar</span>
+        </div>
+        <div class="divide-y divide-slate-100" id="passengers-list">
+          <!-- Dynamic passenger rows -->
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 3: SEGURIDAD Y RÍO TARENA -->
+    <section id="module-seguridad" class="tab-content hidden flex flex-col gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- River Level Vertical Gauge Gauge -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-fluvial-700 uppercase tracking-wider">Monitoreo Hidrológico</span>
+              <span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Lectura Playita Honda</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mt-1">Nivel del Río Tarena</h3>
+            <p class="text-xs text-slate-500 mb-4">Medición empírica comunitaria en la estaca guía del embarcadero</p>
+          </div>
+
+          <!-- Vertical Meter Component -->
+          <div class="flex items-center justify-center gap-6 my-2">
+            <div class="relative w-12 h-56 bg-slate-200 rounded-2xl p-1 flex flex-col justify-end border-2 border-slate-300">
+              <!-- Water fill -->
+              <div id="river-gauge-fill" class="w-full bg-gradient-to-t from-fluvial-800 via-fluvial-500 to-cyan-400 rounded-xl transition-all duration-700 relative" style="height: 62%;">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-1 bg-white/80 rounded-full"></div>
+              </div>
+              <!-- Meter markings -->
+              <div class="absolute inset-0 flex flex-col justify-between py-3 px-1 pointer-events-none text-[10px] font-mono text-slate-500 font-bold">
+                <span class="text-red-600">5.0m - Crítico</span>
+                <span class="text-amber-600">3.8m - Alerta</span>
+                <span class="text-emerald-700">2.5m - Seguro</span>
+                <span class="text-slate-400">1.0m - Bajo</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+                <span class="text-xs text-slate-500 block font-medium">Nivel Actual</span>
+                <span class="text-2xl font-black text-slate-900" id="gauge-level-value">3.10 m</span>
+                <span class="text-xs font-bold text-emerald-600 block mt-0.5">● ESTABLE Y NAVEGABLE</span>
+              </div>
+              <button onclick="simulateRiverUpdate()" class="text-xs bg-fluvial-100 hover:bg-fluvial-200 text-fluvial-800 font-bold py-2 px-3 rounded-xl border border-fluvial-200 transition">
+                Actualizar Medición
+              </button>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100 mt-2">
+            <strong>Recomendación Comunitaria:</strong> Navegar a velocidad reducida con chaleco abrochado. Evitar orillas con socavación.
+          </div>
+        </div>
+
+        <!-- Weather Conditions & Active Safety Alerts -->
+        <div class="lg:col-span-2 flex flex-col gap-4">
+          <!-- Weather summary card -->
+          <div class="bg-gradient-to-r from-fluvial-800 to-fluvial-700 text-white p-5 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-amber-300">
+                <i data-lucide="cloud-rain" class="w-8 h-8"></i>
+              </div>
+              <div>
+                <span class="text-xs text-fluvial-200 font-semibold tracking-wide uppercase">Clima en el Golfo / Cuenca Tarena</span>
+                <h4 class="text-xl font-bold">Nublado con Llovizna Ligera</h4>
+                <p class="text-xs text-slate-200 mt-0.5">Visibilidad: Buena (8 km) • Corriente: Moderada • Viento: 9 km/h</p>
+              </div>
+            </div>
+            <button onclick="openModal('modal-nueva-alerta')" class="bg-seguridad-500 hover:bg-seguridad-600 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-sm transition whitespace-nowrap">
+              <i data-lucide="megaphone" class="w-4 h-4"></i>
+              <span>Reportar Novedad</span>
+            </button>
+          </div>
+
+          <!-- Alert feed -->
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
+            <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+              Alertas Activas del Río y Vía
+            </h4>
+            <div class="flex flex-col gap-3" id="alerts-list">
+              <!-- Rendered dynamic alerts -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4: CONTROL DE INVENTARIO DE RECURSOS -->
+    <section id="module-inventario" class="tab-content hidden flex flex-col gap-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div>
+          <h2 class="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-2.5 h-6 bg-seguridad-500 rounded-full inline-block"></span>
+            Inventario y Dotación de la Red
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Control de recursos aportados por economía solidaria, Alcaldía de Unguía y Consejo Comunitario</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openModal('modal-asignar-recurso')" class="bg-fluvial-700 hover:bg-fluvial-800 text-white font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs sm:text-sm shadow-sm transition">
+            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            <span>Asignar Recurso</span>
+          </button>
+          <button onclick="openModal('modal-recibir-recurso')" class="bg-selva-500 hover:bg-selva-600 text-white font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs sm:text-sm shadow-sm transition">
+            <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+            <span>Recibir Recurso</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Stat Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <!-- Chalecos Card -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 uppercase">Chalecos Certificados</span>
+            <div class="w-8 h-8 rounded-lg bg-orange-100 text-seguridad-600 flex items-center justify-center">
+              <i data-lucide="shield" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="my-3">
+            <span class="text-3xl font-black text-slate-900" id="stat-chalecos-disp">28</span>
+            <span class="text-xs text-slate-500 font-semibold">disponibles en bodega</span>
+          </div>
+          <div class="pt-2 border-t border-slate-100 flex justify-between text-xs text-slate-600 font-medium">
+            <span>En navegación: <b id="stat-chalecos-asig" class="text-fluvial-700 font-bold">7</b></span>
+            <span>Total: <b id="stat-chalecos-total" class="font-bold">35</b></span>
+          </div>
+        </div>
+
+        <!-- Botiquines Card -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 uppercase">Kits de Emergencia</span>
+            <div class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
+              <i data-lucide="cross" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="my-3">
+            <span class="text-3xl font-black text-slate-900" id="stat-botiquines-disp">3</span>
+            <span class="text-xs text-slate-500 font-semibold">listos para zarpe</span>
+          </div>
+          <div class="pt-2 border-t border-slate-100 flex justify-between text-xs text-slate-600 font-medium">
+            <span>En canoas: <b id="stat-botiquines-asig" class="text-fluvial-700 font-bold">1</b></span>
+            <span>Total dotación: <b id="stat-botiquines-total" class="font-bold">4</b></span>
+          </div>
+        </div>
+
+        <!-- Tabletas Card -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 uppercase">Tabletas Comunales</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-100 text-fluvial-700 flex items-center justify-center">
+              <i data-lucide="tablet" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="my-3">
+            <span class="text-3xl font-black text-slate-900" id="stat-tabletas-disp">2</span>
+            <span class="text-xs text-slate-500 font-semibold">activas en operación</span>
+          </div>
+          <div class="pt-2 border-t border-slate-100 flex justify-between text-xs text-slate-600 font-medium">
+            <span>En base/carga: <b id="stat-tabletas-asig" class="text-fluvial-700 font-bold">1</b></span>
+            <span>Total entregadas: <b id="stat-tabletas-total" class="font-bold">3</b></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movement Logs Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center text-xs font-bold text-slate-500 uppercase tracking-wider">
+          <span>Bitácora de Entrega y Custodia Comunitaria</span>
+          <span class="text-slate-400 font-normal">Trazabilidad para asambleas y rendición de cuentas</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50/70 text-slate-500 text-xs font-semibold uppercase border-b border-slate-200">
+              <tr>
+                <th class="p-3">Hora</th>
+                <th class="p-3">Recurso</th>
+                <th class="p-3">Cantidad</th>
+                <th class="p-3">Destino / Canoa</th>
+                <th class="p-3">Responsable</th>
+                <th class="p-3">Movimiento</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-log-table" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 5: SINCRONIZACIÓN OFFLINE Y SISTEMA -->
+    <section id="module-sync" class="tab-content hidden flex flex-col gap-4">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold text-fluvial-700 uppercase tracking-wide">Arquitectura Sin Conectividad Continua</span>
+          <h3 class="text-xl font-bold text-slate-900 mt-1">Sincronización de Datos Rurales</h3>
+          <p class="text-xs sm:text-sm text-slate-500">Los cruces, aforos e inventarios se guardan localmente en la memoria de la tableta y se sincronizan al llegar a un punto con señal en Unguía.</p>
+        </div>
+
+        <button onclick="triggerManualSync()" id="sync-button" class="w-full sm:w-auto bg-fluvial-800 hover:bg-fluvial-900 text-white font-bold px-6 py-3.5 rounded-xl flex items-center justify-center gap-2.5 shadow-md active:scale-95 transition text-sm">
+          <i data-lucide="refresh-cw" class="w-5 h-5" id="sync-icon"></i>
+          <span id="sync-button-text">Sincronizar Datos Ahora</span>
+        </button>
+      </div>
+
+      <!-- Sync Status Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
+          <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="database" class="w-4 h-4 text-fluvial-700"></i>
+            Estado del Almacenamiento Local
+          </h4>
+          <ul class="text-xs sm:text-sm divide-y divide-slate-100">
+            <li class="py-2.5 flex justify-between items-center">
+              <span class="text-slate-600">Registros pendientes en cola:</span>
+              <span class="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200" id="sync-pending-count">14 operaciones</span>
+            </li>
+            <li class="py-2.5 flex justify-between items-center">
+              <span class="text-slate-600">Última sincronización exitosa:</span>
+              <span class="font-semibold text-slate-800" id="sync-last-time">Hoy a las 06:40 AM (Punto Unguía)</span>
+            </li>
+            <li class="py-2.5 flex justify-between items-center">
+              <span class="text-slate-600">Integridad de base de datos comunal:</span>
+              <span class="font-bold text-emerald-600 flex items-center gap-1">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i> Óptima (0 conflictos)
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3">
+          <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="users-2" class="w-4 h-4 text-selva-500"></i>
+            Gobernanza y Actores Vinculados
+          </h4>
+          <div class="text-xs text-slate-600 flex flex-col gap-2">
+            <p><strong>• Consejo Comunitario de Playita Honda:</strong> Validación y veeduría de los turnos de navegación.</p>
+            <p><strong>• Alcaldía Municipal de Unguía:</strong> Acompañamiento en protocolos de seguridad y donación inicial.</p>
+            <p><strong>• Economía Solidaria:</strong> Fondos autogestionados y convocatorias de base comunitaria.</p>
+          </div>
+          <div class="pt-2">
+            <button onclick="showToast('Copia de respaldo exportada a archivo local en la tableta.')" class="w-full text-center text-xs font-bold text-fluvial-700 bg-fluvial-50 hover:bg-fluvial-100 py-2.5 rounded-xl border border-fluvial-200 transition">
+              Descargar Respaldo Comunal (.JSON Seguro)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation Bar (High contrast, rural UX) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-2xl z-40 px-2 py-1.5 flex justify-around items-center">
+    <button onclick="switchTab('turnos')" class="mobile-tab-btn flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-500 active:scale-95" data-tab="turnos">
+      <i data-lucide="calendar-clock" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Turnos</span>
+    </button>
+    <button onclick="switchTab('pasajeros')" class="mobile-tab-btn flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-500 active:scale-95" data-tab="pasajeros">
+      <i data-lucide="users" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Aforo</span>
+    </button>
+    <button onclick="switchTab('seguridad')" class="mobile-tab-btn flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-500 active:scale-95" data-tab="seguridad">
+      <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Río Tarena</span>
+    </button>
+    <button onclick="switchTab('inventario')" class="mobile-tab-btn flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-500 active:scale-95" data-tab="inventario">
+      <i data-lucide="boxes" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Inventario</span>
+    </button>
+    <button onclick="switchTab('sync')" class="mobile-tab-btn flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-500 active:scale-95" data-tab="sync">
+      <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Sync</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: Nuevo Turno -->
+  <div id="modal-nuevo-turno" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900">Programar Nuevo Cruce</h3>
+        <button onclick="closeModal('modal-nuevo-turno')" class="p-1 rounded-full text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form onsubmit="handleCreateShift(event)" class="flex flex-col gap-3.5 text-sm">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Hora de Salida</label>
+          <input type="text" id="shift-time" value="09:30 AM" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Embarcación / Canoa</label>
+          <select id="shift-boat" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="La Esperanza del Tarena">Canoa 'La Esperanza del Tarena'</option>
+            <option value="La Solidaria">Canoa 'La Solidaria'</option>
+            <option value="Briseño 1">Panga 'Briseño 1'</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Capitán Comunitario Asignado</label>
+          <select id="shift-captain" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="Juan Palacios (15 años exp.)">Juan Palacios (15 años de experiencia)</option>
+            <option value="Carlos Murillo (10 años exp.)">Carlos Murillo (10 años de experiencia)</option>
+            <option value="Manuel Córdoba (8 años exp.)">Manuel Córdoba (8 años de experiencia)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Ruta de Conexión</label>
+          <input type="text" id="shift-route" value="Playita Honda ⇄ Desembarcadero Unguía" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="closeModal('modal-nuevo-turno')" class="flex-1 py-3 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancelar</button>
+          <button type="submit" class="flex-1 py-3 bg-selva-500 hover:bg-selva-600 text-white font-bold rounded-xl transition shadow">Confirmar Turno</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Registro Rápido Pasajero -->
+  <div id="modal-nuevo-pasajero" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Registro Rápido de Abordaje</h3>
+          <p class="text-xs text-slate-500">Formulario simplificado para la Tableta Comunal</p>
+        </div>
+        <button onclick="closeModal('modal-nuevo-pasajero')" class="p-1 rounded-full text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form onsubmit="handleRegisterPassenger(event)" class="flex flex-col gap-3 text-sm">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nombre Completo del Pasajero</label>
+          <input type="text" id="p-name" placeholder="Ej. Rosa Hinestroza" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Documento / Cédula</label>
+          <input type="text" id="p-doc" placeholder="Ej. 1077845123" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Contacto de Emergencia / Celular</label>
+          <input type="text" id="p-phone" placeholder="Ej. 312 456 7890 (Familiar o vecino)" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium font-mono">
+        </div>
+        <div class="flex items-center gap-2 p-3 bg-fluvial-50 rounded-xl border border-fluvial-100 text-xs text-fluvial-800">
+          <input type="checkbox" id="p-vest-assigned" checked class="w-4 h-4 text-fluvial-700 rounded">
+          <label for="p-vest-assigned" class="font-semibold cursor-pointer">Chaleco salvavidas asignado y ajustado</label>
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="closeModal('modal-nuevo-pasajero')" class="flex-1 py-3 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cerrar</button>
+          <button type="submit" class="flex-1 py-3 bg-fluvial-700 hover:bg-fluvial-800 text-white font-bold rounded-xl transition shadow">Añadir al Turno</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Reportar Novedad de Seguridad -->
+  <div id="modal-nueva-alerta" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900">Reportar Condición de Ruta</h3>
+        <button onclick="closeModal('modal-nueva-alerta')" class="p-1 rounded-full text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form onsubmit="handleCreateAlert(event)" class="flex flex-col gap-3 text-sm">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tipo de Evento</label>
+          <select id="alert-type" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="palizada">Troncos / Palizada flotante en el canal</option>
+            <option value="clima">Creciente repentina o lluvia torrencial</option>
+            <option value="motor">Avería mecánica preventiva</option>
+            <option value="paso">Bloqueo en el desembarcadero</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Sector o Referencia del Río</label>
+          <input type="text" id="alert-sector" placeholder="Ej. Curva El Remolino o sector Bocas" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Instrucción para los demás canoeros</label>
+          <textarea id="alert-instruction" rows="2" placeholder="Ej. Pasar por el costado derecho a velocidad mínima." required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium"></textarea>
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="closeModal('modal-nueva-alerta')" class="flex-1 py-3 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancelar</button>
+          <button type="submit" class="flex-1 py-3 bg-seguridad-500 hover:bg-seguridad-600 text-white font-bold rounded-xl transition shadow">Emitir Alerta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Asignar Recurso -->
+  <div id="modal-asignar-recurso" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900">Asignar Recurso a Embarcación</h3>
+        <button onclick="closeModal('modal-asignar-recurso')" class="p-1 rounded-full text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form onsubmit="handleInventoryAction(event, 'asignar')" class="flex flex-col gap-3 text-sm">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tipo de Recurso</label>
+          <select id="inv-item-type" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="chalecos">Chalecos Salvavidas Certificados</option>
+            <option value="botiquines">Kit / Botiquín de Primeros Auxilios</option>
+            <option value="tabletas">Tableta Comunal de Respaldo</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Cantidad a entregar</label>
+          <input type="number" id="inv-item-qty" min="1" max="15" value="4" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Embarcación / Destino</label>
+          <input type="text" id="inv-item-dest" value="Canoa 'La Solidaria'" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Capitán o Responsable que recibe</label>
+          <input type="text" id="inv-item-resp" value="Juan Palacios" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="closeModal('modal-asignar-recurso')" class="flex-1 py-3 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancelar</button>
+          <button type="submit" class="flex-1 py-3 bg-fluvial-700 hover:bg-fluvial-800 text-white font-bold rounded-xl transition shadow">Registrar Entrega</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Recibir / Devolver Recurso -->
+  <div id="modal-recibir-recurso" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900">Recibir y Guardar en Bodega</h3>
+        <button onclick="closeModal('modal-recibir-recurso')" class="p-1 rounded-full text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form onsubmit="handleInventoryAction(event, 'recibir')" class="flex flex-col gap-3 text-sm">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tipo de Recurso que regresa</label>
+          <select id="inv-ret-type" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="chalecos">Chalecos Salvavidas Certificados</option>
+            <option value="botiquines">Kit / Botiquín de Primeros Auxilios</option>
+            <option value="tabletas">Tableta Comunal</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Cantidad devuelta</label>
+          <input type="number" id="inv-ret-qty" min="1" max="15" value="4" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Procedencia</label>
+          <input type="text" id="inv-ret-dest" value="Canoa 'La Solidaria'" required class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Entrega conforme (Condición)</label>
+          <select id="inv-ret-cond" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="Buen estado y limpio">Buen estado, secos y completos</option>
+            <option value="Requiere limpieza o secado">Requiere limpieza / secado</option>
+          </select>
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="closeModal('modal-recibir-recurso')" class="flex-1 py-3 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancelar</button>
+          <button type="submit" class="flex-1 py-3 bg-selva-500 hover:bg-selva-600 text-white font-bold rounded-xl transition shadow">Ingresar a Bodega</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div id="toast-notification" class="fixed bottom-20 md:bottom-6 right-4 left-4 md:left-auto md:max-w-sm bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transform translate-y-32 transition-transform duration-300 z-50 border border-slate-700">
+    <i data-lucide="info" class="w-5 h-5 text-amber-400 flex-shrink-0" id="toast-icon"></i>
+    <span class="text-xs sm:text-sm font-medium" id="toast-message">Operación registrada exitosamente.</span>
+  </div>
+
+  <script>
+    // --- Application Reactive State ---
+    const state = {
+      isOnline: false,
+      pendingSyncCount: 14,
+      activeTab: 'turnos',
+      maxBoatCapacity: 15,
+      riverLevel: 3.10,
+      turnos: [
+        {
+          id: 1,
+          time: '08:00 AM',
+          boat: "La Solidaria",
+          captain: "Juan Palacios",
+          experience: "15 años navegando el Tarena",
+          route: "Playita Honda ⇄ Puerto Unguía",
+          status: "En Abordaje",
+          passengersCount: 12,
+          notes: "Prioridad a estudiantes y víveres matutinos."
+        },
+        {
+          id: 2,
+          time: '10:30 AM',
+          boat: "La Esperanza",
+          captain: "Carlos Murillo",
+          experience: "10 años conocedor del afluente",
+          route: "Playita Honda ⇄ Bocas de Tarena",
+          status: "Programado",
+          passengersCount: 0,
+          notes: "Transporte de campesinos con plátano y yuca."
+        },
+        {
+          id: 3,
+          time: '01:30 PM',
+          boat: "Briseño 1",
+          captain: "Manuel Córdoba",
+          experience: "8 años rescatista voluntario",
+          route: "Playita Honda ⇄ Puerto Unguía",
+          status: "Programado",
+          passengersCount: 0,
+          notes: "Cruce de retorno escolar y citas médicas."
+        }
+      ],
+      passengers: [
+        { id: 101, name: "María Elena Mosquera", doc: "32.890.112", phone: "311-234-9988", checked: true, vestNumber: "CH-04" },
+        { id: 102, name: "Arnulfo Córdoba Rivas", doc: "11.782.990", phone: "314-556-1122", checked: true, vestNumber: "CH-05" },
+        { id: 103, name: "Lucía Perea Hinestroza", doc: "1.077.456.120", phone: "310-998-3344", checked: true, vestNumber: "CH-06" },
+        { id: 104, name: "Samuel Palacios (Estudiante)", doc: "1.198.223.111", phone: "312-345-6677", checked: true, vestNumber: "CH-07" },
+        { id: 105, name: "Jhoana Bejarano", doc: "35.890.222", phone: "320-112-9988", checked: true, vestNumber: "CH-08" },
+        { id: 106, name: "Donaldo Cuesta", doc: "71.234.567", phone: "313-789-0011", checked: true, vestNumber: "CH-09" },
+        { id: 107, name: "Yurany Martínez", doc: "1.045.678.900", phone: "315-667-2233", checked: false, vestNumber: "CH-10" },
+        { id: 108, name: "Efrén Mena Cuesta", doc: "11.890.432", phone: "310-889-1234", checked: true, vestNumber: "CH-11" },
+        { id: 109, name: "Kelly Marcela Quejada", doc: "1.077.567.890", phone: "312-778-9900", checked: true, vestNumber: "CH-12" },
+        { id: 110, name: "Javier Murillo Chaverra", doc: "71.890.123", phone: "314-445-6677", checked: true, vestNumber: "CH-13" },
+        { id: 111, name: "Gloria Caicedo", doc: "26.789.012", phone: "311-667-8899", checked: true, vestNumber: "CH-14" },
+        { id: 112, name: "Bairon Romaña", doc: "1.077.901.234", phone: "310-223-4455", checked: true, vestNumber: "CH-15" }
+      ],
+      alerts: [
+        {
+          id: 1,
+          type: "palizada",
+          title: "Palizada en curva 'El Remolino'",
+          description: "Tronco semisumergido cerca al manglar izquierdo. Canoeros deben tomar el canal central a baja velocidad.",
+          time: "07:30 AM",
+          reportedBy: "Capitán Carlos Murillo",
+          severity: "warning"
+        },
+        {
+          id: 2,
+          type: "clima",
+          title: "Precipitación moderada en cabecera",
+          description: "Llovizna persistente. Mantener impermeables y verificar sujeción de chalecos en niños.",
+          time: "07:15 AM",
+          reportedBy: "Veeduría Consejo Comunitario",
+          severity: "info"
+        }
+      ],
+      inventory: {
+        chalecos: { total: 35, assigned: 7 },
+        botiquines: { total: 4, assigned: 1 },
+        tabletas: { total: 3, assigned: 1 }
+      },
+      inventoryLogs: [
+        { time: "07:55 AM", item: "Chalecos Salvavidas", qty: 7, dest: "Canoa 'La Solidaria'", resp: "Juan Palacios", type: "Salida" },
+        { time: "07:50 AM", item: "Kit de Emergencia #1", qty: 1, dest: "Canoa 'La Solidaria'", resp: "Juan Palacios", type: "Salida" },
+        { time: "07:00 AM", item: "Tableta Comunal #2", qty: 1, dest: "Base de Zarpe Playita Honda", resp: "Comité de Logística", type: "Salida" },
+        { time: "Ayer 05:40 PM", item: "Chalecos Salvavidas", qty: 12, dest: "Bodega Comunal", resp: "Manuel Córdoba", type: "Retorno" }
+      ]
+    };
+
+    // --- Core Navigation and Tab Switching ---
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+
+      // Update Desktop tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        const isCurrent = btn.getAttribute('data-tab') === tabId;
+        btn.classList.toggle('bg-fluvial-800', isCurrent);
+        btn.classList.toggle('text-white', isCurrent);
+        btn.classList.toggle('text-slate-600', !isCurrent);
+      });
+
+      // Update Mobile tabs
+      document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+        const isCurrent = btn.getAttribute('data-tab') === tabId;
+        btn.classList.toggle('text-fluvial-800', isCurrent);
+        btn.classList.toggle('text-slate-500', !isCurrent);
+      });
+
+      // Toggle modules
+      document.querySelectorAll('.tab-content').forEach(section => {
+        section.classList.add('hidden');
+      });
+      const activeEl = document.getElementById(`module-${tabId}`);
+      if (activeEl) {
+        activeEl.classList.remove('hidden');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- Renderers ---
+    function renderShifts() {
+      const container = document.getElementById('turnos-list-container');
+      container.innerHTML = state.turnos.map(t => `
+        <div class="bg-white rounded-2xl border ${t.status === 'En Abordaje' ? 'border-fluvial-500 ring-2 ring-fluvial-100' : 'border-slate-200'} p-4 sm:p-5 shadow-sm flex flex-col justify-between transition hover:shadow-md">
+          <div class="flex flex-col gap-2.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded-full ${
+                t.status === 'En Abordaje' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'
+              }">${t.status}</span>
+              <span class="text-lg font-black text-fluvial-800 flex items-center gap-1 font-mono">
+                <i data-lucide="clock" class="w-4 h-4 text-fluvial-600"></i> ${t.time}
+              </span>
+            </div>
+
+            <div class="mt-1">
+              <h3 class="text-base font-bold text-slate-900">${t.boat}</h3>
+              <p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> ${t.route}
+              </p>
+            </div>
+
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs">
+              <span class="font-bold text-slate-700 block">Capitán: ${t.captain}</span>
+              <span class="text-slate-500 text-[11px]">${t.experience}</span>
+            </div>
+
+            <p class="text-xs text-slate-600 italic">"${t.notes}"</p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2">
+            ${
+              t.status === 'En Abordaje'
+                ? `<button onclick="switchTab('pasajeros')" class="w-full bg-fluvial-700 hover:bg-fluvial-800 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="users" class="w-3.5 h-3.5"></i> Gestionar Pasajeros (${state.passengers.length}/${state.maxBoatCapacity})
+                   </button>`
+                : `<button onclick="setShiftInBoarding(${t.id})" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="play" class="w-3.5 h-3.5"></i> Iniciar Abordaje
+                   </button>`
+            }
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function renderPassengers(filter = '') {
+      const list = document.getElementById('passengers-list');
+      const filtered = state.passengers.filter(p => 
+        p.name.toLowerCase().includes(filter.toLowerCase()) || 
+        p.doc.includes(filter)
+      );
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="p-8 text-center text-slate-400 text-sm">
+            <i data-lucide="user-x" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            No se encontraron pasajeros registrados con ese criterio.
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      list.innerHTML = filtered.map(p => `
+        <div class="p-3 sm:p-4 flex items-center justify-between gap-3 hover:bg-slate-50/80 transition">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" onchange="toggleCheckIn(${p.id})" ${p.checked ? 'checked' : ''} class="w-5 h-5 text-fluvial-700 rounded border-slate-300 focus:ring-fluvial-500 cursor-pointer">
+            <div>
+              <div class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <span>${p.name}</span>
+                <span class="text-[11px] bg-slate-100 text-slate-600 font-mono px-1.5 py-0.5 rounded border border-slate-200">${p.vestNumber}</span>
+              </div>
+              <div class="text-xs text-slate-500 flex items-center gap-2 font-mono">
+                <span>C.C: ${p.doc}</span>
+                <span>•</span>
+                <span>Tel: ${p.phone}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold px-2 py-1 rounded-full ${p.checked ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+              ${p.checked ? 'Abordado' : 'Pendiente'}
+            </span>
+            <button onclick="removePassenger(${p.id})" title="Eliminar registro" class="p-1.5 text-slate-400 hover:text-red-500 transition rounded-lg">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      updateCapacityGauge();
+      lucide.createIcons();
+    }
+
+    function updateCapacityGauge() {
+      const count = state.passengers.length;
+      const max = state.maxBoatCapacity;
+      const pct = Math.min(100, Math.round((count / max) * 100));
+
+      const capText = document.getElementById('capacity-text');
+      const progress = document.getElementById('capacity-progress');
+      const pctText = document.getElementById('capacity-pct');
+      const warnText = document.getElementById('capacity-warning-text');
+
+      capText.textContent = `${count} / ${max}`;
+      progress.style.width = `${pct}%`;
+      pctText.textContent = `${pct}% Lleno`;
+
+      // Status color changes
+      if (pct > 90) {
+        progress.className = 'bg-red-500 h-full rounded-full transition-all duration-500';
+        warnText.className = 'font-bold text-red-600 flex items-center gap-1';
+        warnText.innerHTML = '<i data-lucide="alert-octagon" class="w-3.5 h-3.5"></i> Aforo Máximo alcanzado. Prohibido sobrecupo por seguridad fluvial.';
+      } else if (pct >= 70) {
+        progress.className = 'bg-amber-500 h-full rounded-full transition-all duration-500';
+        warnText.className = 'font-bold text-amber-700 flex items-center gap-1';
+        warnText.innerHTML = '<i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Aforo próximo al límite seguro. Asignar últimos chalecos.';
+      } else {
+        progress.className = 'bg-emerald-500 h-full rounded-full transition-all duration-500';
+        warnText.className = 'font-medium text-emerald-700 flex items-center gap-1';
+        warnText.innerHTML = '<i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Aforo seguro dentro del rango permitido (Máx. 15 chalecos obligatorios)';
+      }
+      lucide.createIcons();
+    }
+
+    function renderAlerts() {
+      const container = document.getElementById('alerts-list');
+      container.innerHTML = state.alerts.map(a => `
+        <div class="p-3.5 rounded-xl border ${
+          a.severity === 'warning' ? 'bg-amber-50 border-amber-200 text-amber-950' : 'bg-blue-50 border-blue-200 text-blue-950'
+        } flex flex-col gap-1">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 ${
+              a.severity === 'warning' ? 'text-amber-700' : 'text-blue-700'
+            }">
+              <i data-lucide="${a.severity === 'warning' ? 'alert-triangle' : 'info'}" class="w-4 h-4"></i>
+              ${a.title}
+            </span>
+            <span class="text-[11px] font-mono text-slate-500">${a.time}</span>
+          </div>
+          <p class="text-xs text-slate-700 mt-1">${a.description}</p>
+          <span class="text-[10px] font-semibold text-slate-500 mt-1">Reportado por: ${a.reportedBy}</span>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function renderInventory() {
+      const inv = state.inventory;
+      document.getElementById('stat-chalecos-disp').textContent = inv.chalecos.total - inv.chalecos.assigned;
+      document.getElementById('stat-chalecos-asig').textContent = inv.chalecos.assigned;
+      document.getElementById('stat-chalecos-total').textContent = inv.chalecos.total;
+
+      document.getElementById('stat-botiquines-disp').textContent = inv.botiquines.total - inv.botiquines.assigned;
+      document.getElementById('stat-botiquines-asig').textContent = inv.botiquines.assigned;
+      document.getElementById('stat-botiquines-total').textContent = inv.botiquines.total;
+
+      document.getElementById('stat-tabletas-disp').textContent = inv.tabletas.total - inv.tabletas.assigned;
+      document.getElementById('stat-tabletas-asig').textContent = inv.tabletas.assigned;
+      document.getElementById('stat-tabletas-total').textContent = inv.tabletas.total;
+
+      const logTable = document.getElementById('inventory-log-table');
+      logTable.innerHTML = state.inventoryLogs.map(l => `
+        <tr class="hover:bg-slate-50/80 transition">
+          <td class="p-3 text-xs font-mono text-slate-500">${l.time}</td>
+          <td class="p-3 font-semibold text-slate-900">${l.item}</td>
+          <td class="p-3 font-mono font-bold">${l.qty}</td>
+          <td class="p-3 text-slate-600 text-xs">${l.dest}</td>
+          <td class="p-3 text-slate-600 text-xs">${l.resp}</td>
+          <td class="p-3">
+            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
+              l.type === 'Salida' ? 'bg-orange-100 text-orange-800' : 'bg-emerald-100 text-emerald-800'
+            }">${l.type}</span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // --- Interactive Action Handlers ---
+    function handleCreateShift(e) {
+      e.preventDefault();
+      const time = document.getElementById('shift-time').value;
+      const boat = document.getElementById('shift-boat').value;
+      const captain = document.getElementById('shift-captain').value.split(' (')[0];
+      const route = document.getElementById('shift-route').value;
+
+      state.turnos.push({
+        id: Date.now(),
+        time,
+        boat,
+        captain,
+        experience: "Conductor certificado local",
+        route,
+        status: "Programado",
+        passengersCount: 0,
+        notes: "Turno comunitario acordado en base de zarpe."
+      });
+
+      recordPendingLocalMutation();
+      renderShifts();
+      closeModal('modal-nuevo-turno');
+      showToast('Nuevo turno registrado exitosamente en memoria local.');
+    }
+
+    function setShiftInBoarding(id) {
+      state.turnos.forEach(t => {
+        t.status = t.id === id ? 'En Abordaje' : 'Programado';
+      });
+      renderShifts();
+      switchTab('pasajeros');
+      showToast('Turno puesto en abordaje activo.');
+    }
+
+    function handleRegisterPassenger(e) {
+      e.preventDefault();
+      const name = document.getElementById('p-name').value;
+      const doc = document.getElementById('p-doc').value;
+      const phone = document.getElementById('p-phone').value || 'Sin teléfono';
+      const vestNumber = `CH-${String(state.passengers.length + 1).padStart(2, '0')}`;
+
+      if (state.passengers.length >= state.maxBoatCapacity) {
+        showToast('¡Alerta! Capacidad máxima de la canoa alcanzada (15 personas).', true);
+        return;
+      }
+
+      state.passengers.push({
+        id: Date.now(),
+        name,
+        doc,
+        phone,
+        checked: true,
+        vestNumber
+      });
+
+      recordPendingLocalMutation();
+      renderPassengers();
+      closeModal('modal-nuevo-pasajero');
+      document.getElementById('p-name').value = '';
+      document.getElementById('p-doc').value = '';
+      document.getElementById('p-phone').value = '';
+      showToast(`Pasajero ${name} agregado con chaleco ${vestNumber}.`);
+    }
+
+    function toggleCheckIn(id) {
+      const p = state.passengers.find(item => item.id === id);
+      if (p) {
+        p.checked = !p.checked;
+        recordPendingLocalMutation();
+        renderPassengers();
+      }
+    }
+
+    function removePassenger(id) {
+      state.passengers = state.passengers.filter(p => p.id !== id);
+      recordPendingLocalMutation();
+      renderPassengers();
+      showToast('Pasajero retirado del manifiesto.');
+    }
+
+    function filterPassengers() {
+      const term = document.getElementById('passenger-search-input').value;
+      renderPassengers(term);
+    }
+
+    function handleCreateAlert(e) {
+      e.preventDefault();
+      const sector = document.getElementById('alert-sector').value;
+      const instruction = document.getElementById('alert-instruction').value;
+      const type = document.getElementById('alert-type').value;
+
+      state.alerts.unshift({
+        id: Date.now(),
+        type,
+        title: `Reporte en ${sector}`,
+        description: instruction,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        reportedBy: "Capitán en Cruce",
+        severity: type === 'clima' || type === 'palizada' ? 'warning' : 'info'
+      });
+
+      recordPendingLocalMutation();
+      renderAlerts();
+      closeModal('modal-nueva-alerta');
+      showToast('Alerta de seguridad emitida para la red fluvial.');
+    }
+
+    function simulateRiverUpdate() {
+      // Small random fluctuation simulating tide/flood
+      const delta = (Math.random() * 0.3 - 0.15);
+      state.riverLevel = Math.max(1.5, Math.min(4.8, state.riverLevel + delta));
+      const valStr = state.riverLevel.toFixed(2);
+
+      document.getElementById('gauge-level-value').textContent = `${valStr} m`;
+      const fillPct = Math.round((state.riverLevel / 5.0) * 100);
+      document.getElementById('river-gauge-fill').style.height = `${fillPct}%`;
+
+      showToast(`Medición de río actualizada: ${valStr} metros.`);
+    }
+
+    function handleInventoryAction(e, actionType) {
+      e.preventDefault();
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      if (actionType === 'asignar') {
+        const itemType = document.getElementById('inv-item-type').value;
+        const qty = parseInt(document.getElementById('inv-item-qty').value, 10);
+        const dest = document.getElementById('inv-item-dest').value;
+        const resp = document.getElementById('inv-item-resp').value;
+
+        const currentDisp = state.inventory[itemType].total - state.inventory[itemType].assigned;
+        if (qty > currentDisp) {
+          showToast(`No hay suficientes unidades disponibles (Disponibles: ${currentDisp})`, true);
+          return;
+        }
+
+        state.inventory[itemType].assigned += qty;
+        state.inventoryLogs.unshift({
+          time,
+          item: itemType === 'chalecos' ? 'Chalecos Salvavidas' : itemType === 'botiquines' ? 'Botiquín Primeros Aux.' : 'Tableta Comunal',
+          qty,
+          dest,
+          resp,
+          type: 'Salida'
+        });
+        closeModal('modal-asignar-recurso');
+        showToast(`${qty} ${itemType} asignados a ${dest}.`);
+      } else {
+        const itemType = document.getElementById('inv-ret-type').value;
+        const qty = parseInt(document.getElementById('inv-ret-qty').value, 10);
+        const dest = document.getElementById('inv-ret-dest').value;
+        const cond = document.getElementById('inv-ret-cond').value;
+
+        state.inventory[itemType].assigned = Math.max(0, state.inventory[itemType].assigned - qty);
+        state.inventoryLogs.unshift({
+          time,
+          item: itemType === 'chalecos' ? 'Chalecos Salvavidas' : itemType === 'botiquines' ? 'Botiquín Primeros Aux.' : 'Tableta Comunal',
+          qty,
+          dest: `Recepción desde ${dest} (${cond})`,
+          resp: "Comité de Almacén",
+          type: 'Retorno'
+        });
+        closeModal('modal-recibir-recurso');
+        showToast(`${qty} unidades recibidas en bodega comunal.`);
+      }
+
+      recordPendingLocalMutation();
+      renderInventory();
+    }
+
+    function recordPendingLocalMutation() {
+      state.pendingSyncCount++;
+      document.getElementById('pending-counter-badge').textContent = `${state.pendingSyncCount} registros en cola`;
+      document.getElementById('sync-pending-count').textContent = `${state.pendingSyncCount} operaciones`;
+    }
+
+    function toggleNetworkMode() {
+      state.isOnline = !state.isOnline;
+      const btn = document.getElementById('network-toggle-btn');
+      const banner = document.getElementById('offline-banner');
+      const icon = document.getElementById('net-icon');
+      const text = document.getElementById('net-text');
+
+      if (state.isOnline) {
+        btn.className = 'flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold transition bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30';
+        icon.setAttribute('data-lucide', 'wifi');
+        text.textContent = 'ONLINE (Señal conectada)';
+        banner.className = 'bg-emerald-700 text-white px-4 py-1 text-xs md:text-sm font-semibold flex items-center justify-between shadow-inner';
+        banner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i data-lucide="wifi" class="w-4 h-4 flex-shrink-0"></i>
+            <span>CONECTADO: Señal disponible en punto de conectividad Unguía.</span>
+          </div>
+          <span class="text-[11px] bg-black/20 px-2 py-0.5 rounded-full" id="pending-counter-badge">${state.pendingSyncCount} pendientes por sincronizar</span>
+        `;
+        showToast('Conectividad detectada. Listo para sincronizar.');
+      } else {
+        btn.className = 'flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold transition bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30';
+        icon.setAttribute('data-lucide', 'wifi-off');
+        text.textContent = 'MODO OFFLINE (Click para alternar)';
+        banner.className = 'bg-amber-600 text-white px-4 py-1 text-xs md:text-sm font-semibold flex items-center justify-between shadow-inner';
+        banner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 flex-shrink-0"></i>
+            <span>ESTADO OFFLINE: Almacenamiento seguro en Tableta Comunal de Playita Honda.</span>
+          </div>
+          <span class="text-[11px] bg-black/20 px-2 py-0.5 rounded-full" id="pending-counter-badge">${state.pendingSyncCount} registros en cola</span>
+        `;
+        showToast('Modo Offline: Los datos continúan guardándose localmente.');
+      }
+      lucide.createIcons();
+    }
+
+    function triggerManualSync() {
+      const btn = document.getElementById('sync-button');
+      const icon = document.getElementById('sync-icon');
+      const text = document.getElementById('sync-button-text');
+
+      icon.classList.add('animate-spin');
+      text.textContent = 'Sincronizando con Servidor Central...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+        btn.disabled = false;
+        text.textContent = 'Sincronizar Datos Ahora';
+        state.pendingSyncCount = 0;
+        document.getElementById('pending-counter-badge').textContent = `0 registros en cola (Sincronizado)`;
+        document.getElementById('sync-pending-count').textContent = `0 operaciones pendientes`;
+        document.getElementById('sync-last-time').textContent = `Hoy a las ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (Respaldo Exitoso)`;
+        showToast('¡Sincronización completada! Todos los registros comunales están respaldados.');
+      }, 1500);
+    }
+
+    // --- Modal Helpers ---
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('hidden');
+    }
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('hidden');
+    }
+
+    // --- Toast Helper ---
+    let toastTimeout;
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast-notification');
+      const toastMsg = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.textContent = msg;
+      if (isError) {
+        toast.classList.add('border-red-500');
+        toastIcon.setAttribute('data-lucide', 'alert-circle');
+        toastIcon.className = 'w-5 h-5 text-red-400 flex-shrink-0';
+      } else {
+        toast.classList.remove('border-red-500');
+        toastIcon.setAttribute('data-lucide', 'check-circle');
+        toastIcon.className = 'w-5 h-5 text-emerald-400 flex-shrink-0';
+      }
+      lucide.createIcons();
+
+      toast.classList.remove('translate-y-32');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-32');
+      }, 3500);
+    }
+
+    // --- Live Clock ---
+    function startClock() {
+      const clockEl = document.getElementById('current-clock');
+      setInterval(() => {
+        const d = new Date();
+        clockEl.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }, 1000);
+    }
+
+    // --- Initialization ---
+    window.addEventListener('DOMContentLoaded', () => {
+      startClock();
+      renderShifts();
+      renderPassengers();
+      renderAlerts();
+      renderInventory();
+      switchTab('turnos');
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
